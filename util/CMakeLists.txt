@@ -6,6 +6,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     message("CMAKE IN DEBUG MODE")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -Werror -Wall -Wextra")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Werror -Wall -Wextra")
+    #    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+    #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 
 else ()
 
@@ -20,5 +22,5 @@ include_directories(include)
 add_library(
         chess_library STATIC
         source/Chess_board.cpp
-)
+        source/Piece.cpp source/Moves.cpp include/Moves.hpp)
 

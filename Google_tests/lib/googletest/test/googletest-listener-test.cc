@@ -251,7 +251,7 @@ void VerifyResults(const std::vector<std::string>& data,
   // data.  Hence we save data.size() first.
   EXPECT_EQ(expected_data_size, actual_size);
 
-  // Compares the common prefix.
+  // Compares the util prefix.
   const size_t shorter_size = expected_data_size <= actual_size ?
       expected_data_size : actual_size;
   size_t i = 0;

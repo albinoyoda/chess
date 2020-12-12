@@ -182,7 +182,7 @@ class StrictMock : public MockClass {
   GTEST_DISALLOW_COPY_AND_ASSIGN_(StrictMock);
 };
 
-// The following specializations catch some (relatively more common)
+// The following specializations catch some (relatively more util)
 // user errors of nesting nice and strict mocks.  They do NOT catch
 // all possible errors.
 

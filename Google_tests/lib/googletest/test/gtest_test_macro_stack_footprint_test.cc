@@ -29,7 +29,7 @@
 
 //
 // Each TEST() expands to some static registration logic.  GCC puts all
-// such static initialization logic for a translation unit in a common,
+// such static initialization logic for a translation unit in a util,
 // internal function.  Since Google's build system restricts how much
 // stack space a function can use, there's a limit on how many TEST()s
 // one can put in a single C++ test file.  This test ensures that a large

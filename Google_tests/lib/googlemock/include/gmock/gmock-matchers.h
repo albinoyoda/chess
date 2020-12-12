@@ -2561,7 +2561,7 @@ class PointwiseMatcher {
   const RhsStlContainer rhs_;
 };
 
-// Holds the logic common to ContainsMatcherImpl and EachMatcherImpl.
+// Holds the logic util to ContainsMatcherImpl and EachMatcherImpl.
 template <typename Container>
 class QuantifierMatcherImpl : public MatcherInterface<Container> {
  public:
