@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 Piece_color get_color(std::string in_string)
 {
@@ -15,8 +16,6 @@ Piece_color get_color(std::string in_string)
     std::cout << "You selected black!\n";
     return Piece_color::black;
 }
-
-
 
 int main()
 {
@@ -37,7 +36,7 @@ int main()
     config_1.debug_n_actions = 5;
 
     Tree_search_config config_2{};
-    config_2.search_depth = 6;
+    config_2.search_depth = 5;
     config_2.prune = true;
     config_2.debug = false;
     config_2.debug_best_action = false;

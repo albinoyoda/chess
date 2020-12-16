@@ -12,8 +12,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 else ()
 
     message("CMAKE IN RELEASE MODE")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -ffast-math")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -ffast-math")
 
 endif ()
 

@@ -91,8 +91,45 @@ int Board_state::operator()(const Position& pos) const
 
 void Board_state::move(const Position& prev, const Position& next)
 {
-    state_[next.row][next.col] = state_[prev.row][prev.col];
-    state_[prev.row][prev.col] = 0;
+    if ((state_[prev.row][prev.col] == 5) && (std::abs(next.col - prev.col) == 2))
+    {
+        if (next.col > prev.col)
+        {
+            state_[next.row][next.col] = state_[prev.row][prev.col];
+            state_[prev.row][prev.col] = 0;
+            state_[prev.row][prev.col + 1] = 1;
+            state_[next.row][next.col + 1] = 0;
+        }
+        else
+        {
+            state_[next.row][next.col] = state_[prev.row][prev.col];
+            state_[prev.row][prev.col] = 0;
+            state_[prev.row][prev.col - 1] = 1;
+            state_[next.row][next.col - 2] = 0;
+        }
+    }
+    else if ((state_[prev.row][prev.col] == -5) && (std::abs(next.col - prev.col) == 2))
+    {
+        if (next.col > prev.col)
+        {
+            state_[next.row][next.col] = state_[prev.row][prev.col];
+            state_[prev.row][prev.col] = 0;
+            state_[prev.row][prev.col + 1] = -1;
+            state_[next.row][next.col + 1] = 0;
+        }
+        else
+        {
+            state_[next.row][next.col] = state_[prev.row][prev.col];
+            state_[prev.row][prev.col] = 0;
+            state_[prev.row][prev.col - 1] = -1;
+            state_[next.row][next.col - 2] = 0;
+        }
+    }
+    else
+    {
+        state_[next.row][next.col] = state_[prev.row][prev.col];
+        state_[prev.row][prev.col] = 0;
+    }
 }
 
 int Board_state::value_of_state(Piece_color color) const

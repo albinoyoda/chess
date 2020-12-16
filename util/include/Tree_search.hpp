@@ -3,6 +3,7 @@
 
 #include "Chess_board.hpp"
 
+#include <iostream>
 #include <memory>
 #include <vector>
 struct Tree_search_config
@@ -25,29 +26,32 @@ public:
     Action this_action;
     Piece_color color{};
     std::vector<Action> actions;
-    std::vector<std::unique_ptr<Node>> children;
     int value{};
+    bool is_root{false};
 
-    void add_child(const Action& action, bool debug, int depth, Piece_color maximizing_color);
+    Node traverse(const Action& action, bool debug, int depth, Piece_color maximizing_color);
 };
+
+using Action_value_pair = std::pair<Action, int>;
 
 class Tree_search
 {
 public:
     Tree_search() = delete;
     explicit Tree_search(const Tree_search_config& config, Board_state board_state, Piece_color color)
-        : config_{config}, color{color}
+        : config_{config}, color{color}, root_node{board_state, Action{}, color}
     {
-        root_node = std::make_unique<Node>(board_state, Action{}, color);
+        root_node.is_root = true;
     };
 
-    int search(std::unique_ptr<Node>& node, int depth, int alpha, int beta, bool maximising_player);
+    int search(Node& node, int depth, int alpha, int beta, bool maximising_player);
 
     Action get_best_action();
 
     Tree_search_config config_;
     Piece_color color;
-    std::unique_ptr<Node> root_node;
+    Node root_node;
+    std::vector<Action_value_pair> root_child_values;
     int queries = 0;
 };
 

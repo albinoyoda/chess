@@ -79,7 +79,7 @@ public:
 
     void move(const Position& prev, const Position& next);
 
-    int value_of_state(Piece_color piece_color) const;
+    [[nodiscard]] int value_of_state(Piece_color piece_color) const;
 
     void draw_board() const;
 

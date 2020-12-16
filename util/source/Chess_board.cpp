@@ -22,6 +22,8 @@ bool Chess_board::is_valid_move(std::string in_string) const
         int col2 = int(in_string[2]) - 97;
         int row1 = int(in_string[1]) - 49;
         int row2 = int(in_string[3]) - 49;
+        row1 = 7 - row1;
+        row2 = 7 - row2;
         bool bool1 = (col1 >= 0) && (col1 <= 7);
         bool bool2 = (col2 >= 0) && (col2 <= 7);
         bool bool3 = (row1 >= 0) && (row1 <= 7);
@@ -73,8 +75,7 @@ void Chess_board::move(std::string command)
     std::cout << "Moving: " + command + "\n";
     auto current_pos = coordinate_from_command(command[0], command[1]);
     auto new_pos = coordinate_from_command(command[2], command[3]);
-    board_state_(new_pos) = board_state_(current_pos);
-    board_state_(current_pos) = 0;
+    board_state_.move(current_pos, new_pos);
 }
 
 // void Chess_board::move(const Position& prev, const Position& next)

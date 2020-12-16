@@ -298,11 +298,11 @@ std::vector<Position> get_queen_moves(const Position& position, const Board_stat
 std::vector<Position> get_king_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
-    moves.reserve(8);
+    moves.reserve(9);
     std::vector<Position> taking_moves{};
-    taking_moves.reserve(8);
+    taking_moves.reserve(9);
     std::vector<Position> possible_moves{};
-    possible_moves.reserve(8);
+    possible_moves.reserve(9);
     bool color = is_white(board_state(position));
     possible_moves.emplace_back(position + Position::north_east());
     possible_moves.emplace_back(position + Position::north());
@@ -312,6 +312,33 @@ std::vector<Position> get_king_moves(const Position& position, const Board_state
     possible_moves.emplace_back(position + Position::south_west());
     possible_moves.emplace_back(position + Position::west());
     possible_moves.emplace_back(position + Position::east());
+
+    // Check castling
+    if (position == Position{7, 4})
+    {
+        if (board_state(Position{7, 5}) == 0 && board_state(Position{7, 6}) == 0 && board_state(Position{7, 7}) == 1)
+        {
+            possible_moves.emplace_back(Position{7, 6});
+        }
+        if (board_state(Position{7, 0}) == 1 && board_state(Position{7, 1}) == 0 && board_state(Position{7, 2}) == 0 &&
+            board_state(Position{7, 3}) == 0)
+        {
+            possible_moves.emplace_back(Position{7, 2});
+        }
+    }
+    else if (position == Position{0, 4})
+    {
+        if (board_state(Position{0, 5}) == 0 && board_state(Position{0, 6}) == 0 && board_state(Position{0, 7}) == -1)
+        {
+            possible_moves.emplace_back(Position{0, 6});
+        }
+        if (board_state(Position{0, 0}) == -1 && board_state(Position{0, 1}) == 0 && board_state(Position{0, 2}) == 0 &&
+            board_state(Position{0, 3}) == 0)
+        {
+            possible_moves.emplace_back(Position{0, 2});
+        }
+    }
+
     for (const auto& move : possible_moves)
     {
         if (is_inside_board(move))
@@ -339,7 +366,7 @@ std::vector<Action> get_all_actions(const Board_state& board_state, Piece_color 
         for (int col = 0; col < 8; col++)
         {
             auto pos = Position{row, col};
-            if ((color == Piece_color::white && (board_state(pos) < 0)) ||
+            if ((board_state(pos) == 0) || (color == Piece_color::white && (board_state(pos) < 0)) ||
                 (color == Piece_color::black && (board_state(pos) > 0)))
             {
                 continue;
@@ -355,10 +382,6 @@ std::vector<Action> get_actions_on_square(const Position& position, const Board_
 {
     std::vector<Action> all_actions;
     int sq = board_state(position);
-    if (sq == 0)
-    {
-        return {};
-    }
     switch (sq)
     {
     case Piece_type::white_tower:

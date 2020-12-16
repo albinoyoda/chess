@@ -124,3 +124,75 @@ TEST(TestSuite, test_moves)
         std::cout << action;
     }
 }
+
+TEST(TestSuite, test_castling_black1)
+{
+    Board_state board_state{"bT000000bK000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"};
+    board_state.draw_board();
+    auto black_actions = get_all_actions(board_state, Piece_color::black);
+    EXPECT_TRUE(is_action_in_vector({{0, 4}, {0, 2}}, black_actions));
+    board_state.move({0, 4}, {0, 2});
+    EXPECT_TRUE(board_state({0, 3}) == -1);
+    EXPECT_TRUE(board_state({0, 2}) == -5);
+}
+
+TEST(TestSuite, test_castling_black2)
+{
+    Board_state board_state{"00000000bK0000bT"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"};
+    board_state.draw_board();
+    auto black_actions = get_all_actions(board_state, Piece_color::black);
+    EXPECT_TRUE(is_action_in_vector({{0, 4}, {0, 6}}, black_actions));
+    board_state.move({0, 4}, {0, 6});
+    EXPECT_TRUE(board_state({0, 5}) == -1);
+    EXPECT_TRUE(board_state({0, 6}) == -5);
+}
+
+TEST(TestSuite, test_castling_white1)
+{
+    Board_state board_state{"0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "wT000000wK000000"};
+    board_state.draw_board();
+    auto black_actions = get_all_actions(board_state, Piece_color::white);
+    EXPECT_TRUE(is_action_in_vector({{7, 4}, {7, 2}}, black_actions));
+    board_state.move({7, 4}, {7, 2});
+    EXPECT_TRUE(board_state({7, 3}) == 1);
+    EXPECT_TRUE(board_state({7, 2}) == 5);
+}
+
+TEST(TestSuite, test_castling_white2)
+{
+    Board_state board_state{"00000000bK0000bT"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "00000000wK0000wT"};
+    board_state.draw_board();
+    auto black_actions = get_all_actions(board_state, Piece_color::white);
+    EXPECT_TRUE(is_action_in_vector({{7, 4}, {7, 6}}, black_actions));
+    board_state.move({7, 4}, {7, 6});
+    EXPECT_TRUE(board_state({7, 5}) == 1);
+    EXPECT_TRUE(board_state({7, 6}) == 5);
+}
