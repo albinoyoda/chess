@@ -1,154 +1,126 @@
 #include "Moves.hpp"
+#include "Test_functions.hpp"
 
 #include "gtest/gtest.h"
 
-bool is_move_in_vector(const Position& pos, const std::vector<Position>& moves)
+TEST(TestSuite, test_moves)
 {
-    for (const auto& move : moves)
+    Board_state board_state{"bT0000bQbK000000"
+                            "bPbB000000000000"
+                            "00bH000000000000"
+                            "0000wB0000wQwP00"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "wTwH0000wK000000"};
+    board_state.draw_board();
+    auto black_actions = get_all_actions(board_state, Piece_color::black);
+    // TODO castling
+    // tower
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 0}, {0, 1}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 0}, {0, 2}}, black_actions));
+
+    // queen
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {0, 1}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {0, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {1, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {1, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {1, 4}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {2, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {2, 5}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {3, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {4, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {5, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {6, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {7, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 3}, {3, 6}}, black_actions));
+
+    // king
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 4}, {1, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 4}, {1, 4}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 4}, {1, 5}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{0, 4}, {0, 5}}, black_actions));
+
+    // pawn
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 0}, {2, 0}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 0}, {3, 0}}, black_actions));
+
+    // bishop
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {0, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {2, 0}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {2, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {3, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {4, 4}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {5, 5}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {6, 6}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{1, 1}, {7, 7}}, black_actions));
+
+    // horse
+    EXPECT_TRUE(is_action_in_vector_and_pop({{2, 1}, {0, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{2, 1}, {1, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{2, 1}, {3, 3}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{2, 1}, {4, 2}}, black_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{2, 1}, {4, 0}}, black_actions));
+
+    EXPECT_TRUE(black_actions.empty());
+    for (const auto& action : black_actions)
     {
-        if (move.row == pos.row && move.col == pos.col)
-        {
-            return true;
-        }
+        std::cout << action;
     }
-    return false;
-}
 
-TEST(TestSuite, test_black_pawn_opening)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 6, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
+    auto white_actions = get_all_actions(board_state, Piece_color::white);
 
-    auto possible_moves = get_pawn_moves(Position{1, 0}, board_state);
+    // bishop
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {2, 1}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {4, 1}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {5, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {4, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {5, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {6, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {2, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {1, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {0, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 2}, {7, 6}}, white_actions));
 
-    ASSERT_EQ(possible_moves.size(), 2);
-    ASSERT_TRUE(is_move_in_vector(Position{2, 0}, possible_moves));
-    ASSERT_TRUE(is_move_in_vector(Position{3, 0}, possible_moves));
-}
+    // queen
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {3, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {3, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {2, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {1, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {0, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {4, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {5, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {6, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {7, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {2, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {1, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {0, 2}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {4, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {5, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {6, 2}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {2, 6}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {1, 7}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {4, 6}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 5}, {5, 7}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{3, 6}, {2, 6}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {1, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {6, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {5, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {4, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {3, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 0}, {2, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 1}, {6, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 1}, {5, 2}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 1}, {5, 0}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 4}, {6, 5}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 4}, {6, 4}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 4}, {6, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 4}, {7, 3}}, white_actions));
+    EXPECT_TRUE(is_action_in_vector_and_pop({{7, 4}, {7, 5}}, white_actions));
 
-TEST(TestSuite, test_black_pawn_take_border)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {0, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {-6, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 6, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{5, 0}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{6, 1}, possible_moves));
-}
-
-TEST(TestSuite, test_black_pawn_take_border_right)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {0, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, -6},
-                            {6, 6, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{5, 7}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{6, 6}, possible_moves));
-}
-
-TEST(TestSuite, test_white_pawn_opening)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 6, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{6, 0}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 2);
-    ASSERT_TRUE(is_move_in_vector(Position{5, 0}, possible_moves));
-    ASSERT_TRUE(is_move_in_vector(Position{4, 0}, possible_moves));
-}
-
-TEST(TestSuite, test_white_pawn_opening_blocked)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 2, 0, 0, 0, 0, 0},
-                            {6, 6, 6, 6, 6, 6, 6, 6},
-                            {1, 0, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{6, 2}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{4, 2}, possible_moves));
-}
-
-TEST(TestSuite, test_white_pawn_take)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 6, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 0, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{2, 1}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 2);
-    ASSERT_TRUE(is_move_in_vector(Position{1, 0}, possible_moves));
-    ASSERT_TRUE(is_move_in_vector(Position{1, 2}, possible_moves));
-}
-
-TEST(TestSuite, test_white_pawn_take_border)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {6, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 0, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{2, 0}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{1, 1}, possible_moves));
-}
-
-TEST(TestSuite, test_white_pawn_take_border_right)
-{
-    Board_state board_state{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                            {-6, -6, -6, -6, -6, -6, -6, -6},
-                            {0, 0, 0, 0, 0, 0, 0, 6},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0},
-                            {6, 0, 6, 6, 6, 6, 6, 6},
-                            {1, 2, 3, 4, 5, 3, 2, 1}};
-
-    auto possible_moves = get_pawn_moves(Position{2, 7}, board_state);
-
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{1, 6}, possible_moves));
+    EXPECT_TRUE(white_actions.empty());
+    for (const auto& action : white_actions)
+    {
+        std::cout << action;
+    }
 }

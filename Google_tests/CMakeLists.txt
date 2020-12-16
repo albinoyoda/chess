@@ -8,7 +8,14 @@ include_directories(util/include)
 
 # 'Google_Tests_run' is the target name
 # 'test1.cpp tests2.cpp' are source files with tests
-add_executable(Google_Tests_run test_chess_board.cpp test_moves.cpp)
+add_executable(Google_Tests_run
+        test_chess_board.cpp
+        test_pawn_moves.cpp
+        test_tower_moves.cpp
+        test_tree_search.cpp
+        test_bishop_moves.cpp
+        test_moves.cpp
+        )
 
 target_link_libraries(Google_Tests_run gtest gtest_main)
 target_link_libraries(Google_Tests_run gtest chess_library)

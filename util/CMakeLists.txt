@@ -22,5 +22,7 @@ include_directories(include)
 add_library(
         chess_library STATIC
         source/Chess_board.cpp
-        source/Piece.cpp source/Moves.cpp include/Moves.hpp)
+        source/Piece.cpp
+        source/Moves.cpp
+        source/Types.cpp source/Test_functions.cpp include/Test_functions.hpp source/Tree_search.cpp include/Tree_search.hpp)
 

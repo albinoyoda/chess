@@ -4,8 +4,8 @@ project(chess_project)
 
 include_directories(util/include/)
 
-add_executable(chess main.cpp)
-target_link_libraries(chess chess_library)
+add_executable(pepega_chess main.cpp)
+target_link_libraries(pepega_chess chess_library)
 
 add_subdirectory(Google_tests)
 add_subdirectory(util)

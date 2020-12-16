@@ -2,54 +2,61 @@
 
 #include <iostream>
 
-std::map<int, std::string> print_piece{{0, "[  ]"},  {1, "[wT]"},  {2, "[wH]"},  {3, "[wB]"},  {4, "[wQ]"},
-                                       {5, "[wK]"},  {6, "[wP]"},  {-1, "[bT]"}, {-2, "[bH]"}, {-3, "[bB]"},
-                                       {-4, "[bQ]"}, {-5, "[bK]"}, {-6, "[bP]"}};
-
-std::string Chess_board::toChessNote(Position p)
+Position Chess_board::coordinate_from_command(char col_char, char row_char)
 {
-    std::string s = "";
-    s += char(p.row + 97);
-    s += char(7 - p.col + 49);
-    return s;
-}
-
-Position Chess_board::coordinate_from_command(char row_char, char col_char)
-{
-    int row = int(row_char) - 97;
+    int col = int(col_char) - 97;
+    int row = int(row_char) - 49;
     row = 7 - row;
-    int col = int(col_char) - 49;
     return {row, col};
 }
 
-Chess_board::Chess_board()
-    : board_state_{std::array<int, 8>{-1, -2, -3, -4, -5, -3, -2, -1},
-                   {-6, -6, -6, -6, -6, -6, -6, -6},
-                   {0, 0, 0, 0, 0, 0, 0, 0},
-                   {0, 0, 0, 0, 0, 0, 0, 0},
-                   {0, 0, 0, 0, 0, 0, 0, 0},
-                   {0, 0, 0, 0, 0, 0, 0, 0},
-                   {6, 6, 6, 6, 6, 6, 6, 6},
-                   {1, 2, 3, 4, 5, 3, 2, 1}}
+bool Chess_board::is_valid_move(std::string in_string) const
 {
-}
-
-Chess_board::Chess_board(Board_state custom_state) : board_state_{custom_state}
-{
+    if (in_string.empty())
+    {
+        return false;
+    }
+    if (in_string.size() == 4)
+    {
+        int col1 = int(in_string[0]) - 97;
+        int col2 = int(in_string[2]) - 97;
+        int row1 = int(in_string[1]) - 49;
+        int row2 = int(in_string[3]) - 49;
+        bool bool1 = (col1 >= 0) && (col1 <= 7);
+        bool bool2 = (col2 >= 0) && (col2 <= 7);
+        bool bool3 = (row1 >= 0) && (row1 <= 7);
+        bool bool4 = (row2 >= 0) && (row2 <= 7);
+        if (bool1 && bool2 && bool3 && bool4)
+        {
+            Position pos1 = {row1, col1};
+            Position pos2 = {row2, col2};
+            auto actions = get_actions_on_square(pos1, board_state_);
+            Action commanded_action = Action{pos1, pos2};
+            if (is_action_in_vector(commanded_action, actions))
+            {
+                return true;
+            }
+        }
+    }
+    std::cout << "Not valid move: " << in_string << std::endl;
+    return false;
 }
 
 void Chess_board::draw_board() const
 {
-    std::string row_labels = "hgfedcba";
-    std::string col_labels = "12345678";
+    std::string row_labels = "87654321";
+    std::string col_labels = "abcdefgh";
     size_t index = 0;
-    for (const auto& row : board_state_)
+    //    std::string standing{"--------------------------------"};
+    //    std::cout << "W";
+    //    std::cout << "B";
+    for (const auto& row : board_state_.state_)
     {
         std::cout << row_labels[index++];
         std::cout << " ";
         for (const auto& piece : row)
         {
-            std::cout << print_piece[piece];
+            std::cout << print_piece.at(piece);
         }
         std::cout << "\n";
     }
@@ -66,6 +73,48 @@ void Chess_board::move(std::string command)
     std::cout << "Moving: " + command + "\n";
     auto current_pos = coordinate_from_command(command[0], command[1]);
     auto new_pos = coordinate_from_command(command[2], command[3]);
-    board_state_[new_pos.row][new_pos.col] = board_state_[current_pos.row][current_pos.col];
-    board_state_[current_pos.row][current_pos.col] = 0;
+    board_state_(new_pos) = board_state_(current_pos);
+    board_state_(current_pos) = 0;
+}
+
+// void Chess_board::move(const Position& prev, const Position& next)
+//{
+//    board_state_.move(prev, next);
+//    state_[next.row][next.col] = state_[prev.row][prev.col];
+//    state_[prev.row][prev.col] = 0;
+//}
+
+bool Chess_board::find_white_king()
+{
+    for (const auto& row : board_state_.state_)
+    {
+        for (const auto& piece : row)
+        {
+            if (piece == 5)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Chess_board::find_black_king()
+{
+    for (const auto& row : board_state_.state_)
+    {
+        for (const auto& piece : row)
+        {
+            if (piece == -5)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Chess_board::find_kings()
+{
+    return find_white_king() && find_black_king();
 }
