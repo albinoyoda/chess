@@ -18,6 +18,54 @@ bool is_inside_board(const Position& pos)
 }
 } // namespace
 
+std::ostream& operator<<(std::ostream& os, const Piece_type& piece)
+{
+    std::string white{"white "};
+    std::string black{"black "};
+    switch (piece)
+    {
+    case Piece_type::white_tower:
+        os << white + "tower";
+        break;
+    case Piece_type::black_tower:
+        os << black + "tower";
+        break;
+    case Piece_type::white_knight:
+        os << white + "knight";
+        break;
+    case Piece_type::black_knight:
+        os << black + "knight";
+        break;
+    case Piece_type::white_bishop:
+        os << white + "bishop";
+        break;
+    case Piece_type::black_bishop:
+        os << black + "bishop";
+        break;
+    case Piece_type::white_queen:
+        os << white + "queen";
+        break;
+    case Piece_type::black_queen:
+        os << black + "queen";
+        break;
+    case Piece_type::white_king:
+        os << white + "king";
+        break;
+    case Piece_type::black_king:
+        os << black + "king";
+        break;
+    case Piece_type::white_pawn:
+        os << white + "pawn";
+        break;
+    case Piece_type::black_pawn:
+        os << black + "pawn";
+        break;
+    default:
+        os << "unknown piece";
+    }
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const Piece_color& piece)
 {
     if (piece == Piece_color::white)

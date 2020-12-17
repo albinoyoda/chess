@@ -2,6 +2,25 @@
 
 #include <iostream>
 
+namespace
+{
+std::string get_indicator_bar(int value)
+{
+    std::string standing{"|---<---<---<---+--->--->--->---|"};
+    int indicator_pos = int(double(value) / 100.0);
+    if (std::abs(value) > 400)
+    {
+        int subtract_value = (value > 0) ? 400 : -400;
+        value -= subtract_value;
+        indicator_pos = int(double(subtract_value) / 100.0);
+        indicator_pos += int(double(value) / 500.0);
+    }
+    indicator_pos = std::min(std::max(16 + indicator_pos, 0), 32);
+    standing[indicator_pos] = '|';
+    return "B" + standing + "W";
+}
+} // namespace
+
 Position Chess_board::coordinate_from_command(char col_char, char row_char)
 {
     int col = int(col_char) - 97;
@@ -44,14 +63,14 @@ bool Chess_board::is_valid_move(std::string in_string) const
     return false;
 }
 
-void Chess_board::draw_board() const
+void Chess_board::draw_board(int value_of_computer) const
 {
     std::string row_labels = "87654321";
     std::string col_labels = "abcdefgh";
     size_t index = 0;
-    //    std::string standing{"--------------------------------"};
-    //    std::cout << "W";
-    //    std::cout << "B";
+    int white_value = board_state_.value_of_state(Piece_color::white);
+    std::cout << get_indicator_bar(white_value) << " Board value\n";
+    std::cout << get_indicator_bar(value_of_computer) << " Computer's estimate\n";
     for (const auto& row : board_state_.state_)
     {
         std::cout << row_labels[index++];

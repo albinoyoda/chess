@@ -21,6 +21,8 @@ enum Piece_type
     black_pawn = -6,
 };
 
+std::ostream& operator<<(std::ostream& os, const Piece_type& action);
+
 enum class Piece_color
 {
     white,

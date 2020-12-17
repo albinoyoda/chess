@@ -14,7 +14,7 @@ public:
 
     bool is_valid_move(std::string in_string) const;
 
-    void draw_board() const;
+    void draw_board(int value_of_computer = 0) const;
 
     void move(std::string command);
 
