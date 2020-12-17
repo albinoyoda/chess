@@ -130,6 +130,14 @@ void Board_state::move(const Position& prev, const Position& next)
         state_[next.row][next.col] = state_[prev.row][prev.col];
         state_[prev.row][prev.col] = 0;
     }
+    if ((state_[next.row][next.col] == 6) && (next.row == 0))
+    {
+        state_[next.row][next.col] = 4;
+    }
+    else if ((state_[next.row][next.col] == -6) && (next.row == 7))
+    {
+        state_[next.row][next.col] = -4;
+    }
 }
 
 int Board_state::value_of_state(Piece_color color) const

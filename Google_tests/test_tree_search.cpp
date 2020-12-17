@@ -62,7 +62,7 @@ TEST(TestSuite, test_tree_search_depth_2_simple)
 
     Tree_search_config config{};
     config.search_depth = 3;
-    config.debug_best_action = true;
+//    config.debug_best_action = true;
 
     Tree_search tree_search{config, board_state, Piece_color::black};
     tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(),
@@ -87,8 +87,8 @@ TEST(TestSuite, test_tree_search_depth_2)
     Tree_search_config config{};
     config.search_depth = 3;
     config.prune = true;
-    config.debug = true;
-    config.debug_best_action = true;
+//    config.debug = true;
+//    config.debug_best_action = true;
 
     Tree_search tree_search{config, board_state, Piece_color::black};
     tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(),
@@ -114,7 +114,7 @@ TEST(TestSuite, test_tree_search_mate_in_2_puzzle)
     config.search_depth = 2;
     config.prune = true;
     config.debug = false;
-    config.debug_best_action = true;
+//    config.debug_best_action = true;
     config.debug_n_actions = 100000;
 
     Tree_search tree_search{config, board_state, Piece_color::white};
