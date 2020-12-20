@@ -33,15 +33,15 @@ int main()
     //    std::cin >> difficulty;
     //    int ai_level = get_color(difficulty);
 
-    Tree_search_config config_1{};
-    config_1.search_depth = 4;
-    config_1.prune = true;
-    config_1.debug = false;
-    config_1.debug_best_action = false;
-    config_1.debug_n_actions = 5;
+    //    Tree_search_config config_1{};
+    //    config_1.search_depth = 2;
+    //    config_1.prune = true;
+    //    config_1.debug = false;
+    //    config_1.debug_best_action = false;
+    //    config_1.debug_n_actions = 5;
 
     Tree_search_config config_2{};
-    config_2.search_depth = 6;
+    config_2.search_depth = 4;
     config_2.prune = true;
     config_2.debug = false;
     config_2.debug_best_action = false;
@@ -49,7 +49,7 @@ int main()
 
     Chess_board chess_board{};
     std::cout << "Game started! Current board state:\n";
-    chess_board.draw_board();
+    chess_board.draw_board(0, true);
     int value_of_computer_move{};
     while (chess_board.find_kings())
     {
@@ -70,8 +70,8 @@ int main()
             //            Tree_search tree_search{config_1, chess_board.board_state_, player1_color};
             //            tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(),
             //                               std::numeric_limits<int>::max(), true);
-            //            Action best_action = tree_search.get_best_action();
-            //            chess_board.board_state_.move(best_action.first, best_action.second);
+            //            Action best_action_ = tree_search.get_best_action();
+            //            chess_board.board_state_.move(best_action_.first, best_action_.second);
         }
         else
         {
@@ -79,7 +79,8 @@ int main()
             tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(),
                                std::numeric_limits<int>::max(), true);
             best_action = tree_search.get_best_action();
-            value_of_computer_move = tree_search.root_child_values[0].second;
+            value_of_computer_move =
+                tree_search.root_child_values[0].second - chess_board.board_state_.value_of_state(player2_color);
             moved_piece = Piece_type(chess_board.board_state_(best_action.first));
             captured_piece = Piece_type(chess_board.board_state_(best_action.second));
             chess_board.board_state_.move(best_action.first, best_action.second);
@@ -109,7 +110,7 @@ int main()
         {
             std::cout << "Computers turn...\n";
         }
-        chess_board.draw_board(-value_of_computer_move);
+        chess_board.draw_board(-value_of_computer_move, true);
     }
     if (chess_board.find_black_king())
     {

@@ -18,13 +18,14 @@ TEST(TestSuite, test_tree_search_performance)
                             "wTwH0000wT00wK00"};
 
     Tree_search_config config{};
-    config.search_depth = 1;
+    config.search_depth = 5;
 
     Tree_search tree_search{config, board_state, Piece_color::black};
     tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(),
                        true);
     Action best_action = tree_search.get_best_action();
 
-    std::cout << "Measured time " << (double)(clock() - clock1) / CLOCKS_PER_SEC << " " << std::endl;
+    std::cout << "n searches " << tree_search.queries << ", Measured time "
+              << (double)(clock() - clock1) / CLOCKS_PER_SEC << " " << std::endl;
     ;
 }

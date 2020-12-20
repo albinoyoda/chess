@@ -196,6 +196,10 @@ int Board_state::value_of_state(Piece_color color) const
     {
         for (const auto& sq : row)
         {
+            if (sq == 0)
+            {
+                continue;
+            }
             switch (sq)
             {
             case Piece_type::white_tower:

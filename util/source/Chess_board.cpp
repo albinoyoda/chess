@@ -6,18 +6,19 @@ namespace
 {
 std::string get_indicator_bar(int value)
 {
-    std::string standing{"|---<---<---<---+--->--->--->---|"};
+    std::string skip = "               ";
+    std::string standing{"|---<---<---<---<---<---<---<------->--->--->--->--->--->--->---|"};
     int indicator_pos = int(double(value) / 100.0);
-    if (std::abs(value) > 400)
+    if (std::abs(value) > 800)
     {
-        int subtract_value = (value > 0) ? 400 : -400;
+        int subtract_value = (value > 0) ? 800 : -800;
         value -= subtract_value;
         indicator_pos = int(double(subtract_value) / 100.0);
         indicator_pos += int(double(value) / 500.0);
     }
-    indicator_pos = std::min(std::max(16 + indicator_pos, 0), 32);
-    standing[indicator_pos] = '|';
-    return "B" + standing + "W";
+    indicator_pos = std::min(std::max(32 + indicator_pos, 0), 64);
+    standing[indicator_pos] = 'X';
+    return skip + "Black " + standing + " White";
 }
 } // namespace
 
@@ -63,30 +64,154 @@ bool Chess_board::is_valid_move(std::string in_string) const
     return false;
 }
 
-void Chess_board::draw_board(int value_of_computer) const
+void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
 {
     std::string row_labels = "87654321";
     std::string col_labels = "abcdefgh";
     size_t index = 0;
     int white_value = board_state_.value_of_state(Piece_color::white);
-    std::cout << get_indicator_bar(white_value) << " Board value\n";
-    std::cout << get_indicator_bar(value_of_computer) << " Computer's estimate\n";
-    for (const auto& row : board_state_.state_)
+    std::cout << get_indicator_bar(white_value) << " <- Board value\n";
+    std::cout << get_indicator_bar(value_of_computer) << " <- Computer's estimate\n";
+
+    int square_width = 15;
+    int square_height = 6;
+
+    int board_width = square_width * 9 + 1;
+
+    if (fancy_art)
     {
-        std::cout << row_labels[index++];
-        std::cout << " ";
-        for (const auto& piece : row)
+        std::string board{};
+        std::string filled{};
+        std::string empty{};
+
+        for (int i = 0; i < square_width; i++)
         {
-            std::cout << print_piece.at(piece);
+            filled.push_back(':');
+            empty.push_back(' ');
+        }
+
+        for (int row = 0; row < 9 * square_height; row++)
+        {
+            board += empty;
+            for (int col = 0; col < 8; col++)
+            {
+                if (row >= 8 * square_height)
+                {
+                    board += empty;
+                }
+                else
+                {
+                    if ((row / square_height + col) % 2)
+                    {
+                        board += filled;
+                    }
+                    else
+                    {
+                        board += empty;
+                    }
+                }
+            }
+            board += '\n';
+        }
+
+        for (int row = 0; row < 8; row++)
+        {
+            auto shape = number_shapes.at(8 - row);
+            int shape_height = shape.size();
+            int shape_width = shape[0].size();
+            int start_row = row * square_height + square_height / (shape_height + 1);
+            int start_col = (square_width - shape_width) / 2;
+            int start_index = start_row * board_width + start_col;
+            for (const auto& shape_row : shape)
+            {
+                int paint_index = start_index;
+                for (const auto& ascii_symbol : shape_row)
+                {
+                    board[paint_index] = ascii_symbol;
+
+                    paint_index++;
+                }
+                start_index += board_width;
+            }
+        }
+
+        for (int col = 1; col < 9; col++)
+        {
+            auto shape = letter_shapes.at(col);
+            int shape_height = shape.size();
+            int shape_width = shape[0].size();
+            int start_row = 8 * square_height + square_height / (shape_height + 1);
+            int start_col = col * square_width + (square_width - shape_width) / 2;
+            int start_index = start_row * board_width + start_col;
+            for (const auto& shape_row : shape)
+            {
+                int paint_index = start_index;
+                for (const auto& ascii_symbol : shape_row)
+                {
+                    board[paint_index] = ascii_symbol;
+
+                    paint_index++;
+                }
+                start_index += board_width;
+            }
+        }
+
+        for (int row = 0; row < 8; row++)
+        {
+            for (int col = 0; col < 8; col++)
+            {
+                if (board_state_({row, col}) != 0)
+                {
+                    auto shape = figure_shapes.at(board_state_({row, col}));
+                    int shape_height = shape.size();
+                    int shape_width = shape[0].size();
+                    int start_row = row * square_height + square_height / (shape_height + 1);
+                    int start_col = (col + 1) * square_width + (square_width - shape_width) / 2;
+                    int start_index = start_row * board_width + start_col;
+                    for (const auto& shape_row : shape)
+                    {
+                        int paint_index = start_index;
+                        for (const auto& ascii_symbol : shape_row)
+                        {
+                            if (ascii_symbol != ' ')
+                            {
+                                if (ascii_symbol == '.')
+                                {
+                                    board[paint_index] = ' ';
+                                }
+                                else
+                                {
+                                    board[paint_index] = ascii_symbol;
+                                }
+                            }
+                            paint_index++;
+                        }
+                        start_index += board_width;
+                    }
+                }
+            }
+        }
+        std::cout << board;
+    }
+    else
+    {
+        for (const auto& row : board_state_.state_)
+        {
+            std::cout << row_labels[index++];
+            std::cout << " ";
+            for (const auto& piece : row)
+            {
+                std::cout << print_piece.at(piece);
+            }
+            std::cout << "\n";
+        }
+        for (const auto& label : col_labels)
+        {
+            std::cout << "   ";
+            std::cout << label;
         }
         std::cout << "\n";
     }
-    for (const auto& label : col_labels)
-    {
-        std::cout << "   ";
-        std::cout << label;
-    }
-    std::cout << "\n";
 }
 
 void Chess_board::move(std::string command)
