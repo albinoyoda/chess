@@ -15,7 +15,8 @@ add_executable(Google_Tests_run
         test_tree_search.cpp
         test_bishop_moves.cpp
         test_moves.cpp
-        test_runtime_performance.cpp
+        test_king_moves.cpp
+        test_horse_moves.cpp
         )
 
 target_link_libraries(Google_Tests_run gtest gtest_main)

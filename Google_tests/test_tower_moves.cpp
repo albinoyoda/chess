@@ -15,7 +15,7 @@ TEST(TestSuite, test_black_tower_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{0, 0}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_black_tower_opening2)
@@ -30,7 +30,7 @@ TEST(TestSuite, test_black_tower_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{0, 7}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_black_tower_open_area)
@@ -45,7 +45,7 @@ TEST(TestSuite, test_black_tower_open_area)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{3, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 11);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 11);
 }
 
 TEST(TestSuite, test_white_tower_open_area)
@@ -60,7 +60,7 @@ TEST(TestSuite, test_white_tower_open_area)
                             "00wHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{4, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 11);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 11);
 }
 
 TEST(TestSuite, test_white_tower_opening1)
@@ -75,7 +75,7 @@ TEST(TestSuite, test_white_tower_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{7, 0}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_white_tower_opening2)
@@ -90,5 +90,5 @@ TEST(TestSuite, test_white_tower_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_tower_moves(Position{7, 7}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }

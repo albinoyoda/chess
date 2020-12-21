@@ -6,10 +6,16 @@
 #include <iostream>
 #include <limits>
 
-Node::Node(const Board_state& state, Action action, Piece_color color)
+Node::Node(const Board_state& state, Action action, Piece_color color, bool king_dead)
     : state(state), this_action{std::move(action)}, color{color}
 {
-    actions = get_all_actions(state, color);
+    if (!king_dead)
+    {
+        // Check if there is a mate
+        color == Piece_color::white ? get_all_actions(this->state, Piece_color::black) :
+                                      get_all_actions(this->state, Piece_color::white);
+        actions = get_all_actions(this->state, color);
+    }
 }
 
 Node Node::traverse(const Action& action, bool debug, int depth, Piece_color maximizing_color)
@@ -29,6 +35,7 @@ Node Node::traverse(const Action& action, bool debug, int depth, Piece_color max
         state.draw_board();
     }
     Board_state new_state = state;
+    bool king_dead = std::abs(new_state(action.second)) == 5;
     new_state.move(action.first, action.second);
     if (debug)
     {
@@ -45,7 +52,7 @@ Node Node::traverse(const Action& action, bool debug, int depth, Piece_color max
     {
         new_color = maximizing_color == Piece_color::white ? Piece_color::black : Piece_color::white;
     }
-    return Node{new_state, action, new_color};
+    return Node{new_state, action, new_color, king_dead};
 }
 
 int Tree_search::search(Node& node, int depth, int alpha, int beta, bool maximizing_player)
@@ -62,13 +69,18 @@ int Tree_search::search(Node& node, int depth, int alpha, int beta, bool maximiz
     }
     if (maximizing_player)
     {
-        int best_value = std::numeric_limits<int>::min();
+        int best_value = std::numeric_limits<int>::min() + 1000;
         for (const auto& action : node.actions)
         {
             Node child = node.traverse(action, config_.debug, depth, root_node.color);
             int value = search(child, depth + 1, alpha, beta, !maximizing_player);
             best_value = std::max(value, best_value);
-            alpha = std::max(alpha, best_value);
+            bool set_alpha = false;
+            if (alpha < best_value)
+            {
+                set_alpha = true;
+                alpha = std::max(alpha, best_value);
+            }
             if (node.is_root)
             {
                 root_child_values.emplace_back(action, value);
@@ -85,7 +97,10 @@ int Tree_search::search(Node& node, int depth, int alpha, int beta, bool maximiz
                     {
                         std::cout << "Pruning Tree!" << std::endl;
                     }
-                    best_value -= 1;
+                    if (!set_alpha)
+                    {
+                        best_value -= 1;
+                    }
                     break;
                 }
             }
@@ -98,13 +113,19 @@ int Tree_search::search(Node& node, int depth, int alpha, int beta, bool maximiz
     }
     else
     {
-        int best_value = std::numeric_limits<int>::max();
+        int best_value = std::numeric_limits<int>::max() - 1000;
         for (const auto& action : node.actions)
         {
             Node child = node.traverse(action, config_.debug, depth, root_node.color);
             int value = search(child, depth + 1, alpha, beta, !maximizing_player);
             best_value = std::min(value, best_value);
             beta = std::min(beta, best_value);
+            bool set_beta = false;
+            if (beta < best_value)
+            {
+                set_beta = true;
+                beta = std::min(beta, best_value);
+            }
             if (config_.debug)
             {
                 std::cout << "Depth: " << depth << ", alpha = " << alpha << ", beta = " << beta << std::endl;
@@ -117,7 +138,10 @@ int Tree_search::search(Node& node, int depth, int alpha, int beta, bool maximiz
                     {
                         std::cout << "Pruning Tree" << std::endl;
                     }
-                    best_value -= 1;
+                    if (!set_beta)
+                    {
+                        best_value -= 1;
+                    }
                     break;
                 }
             }
@@ -156,4 +180,8 @@ Action Tree_search::get_best_action()
         }
     }
     return root_child_values[0].first;
+}
+void Tree_search::find_best_action()
+{
+    search(root_node, 0, std::numeric_limits<int>::min() + 1000, std::numeric_limits<int>::max() - 1000, true);
 }

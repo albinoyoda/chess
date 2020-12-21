@@ -76,8 +76,7 @@ int main()
         else
         {
             Tree_search tree_search{config_2, chess_board.board_state_, player2_color};
-            tree_search.search(tree_search.root_node, 0, std::numeric_limits<int>::min(),
-                               std::numeric_limits<int>::max(), true);
+            tree_search.find_best_action();
             best_action = tree_search.get_best_action();
             value_of_computer_move =
                 tree_search.root_child_values[0].second - chess_board.board_state_.value_of_state(player2_color);
@@ -87,7 +86,7 @@ int main()
             n_searches = tree_search.queries;
         }
         player1_turn = !player1_turn;
-        std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         if (player1_turn)
         {
             std::cout << best_action;

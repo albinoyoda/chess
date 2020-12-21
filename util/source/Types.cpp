@@ -139,6 +139,7 @@ int Board_state::operator()(const Position& pos) const
 
 void Board_state::move(const Position& prev, const Position& next)
 {
+    // Castling
     if ((state_[prev.row][prev.col] == 5) && (std::abs(next.col - prev.col) == 2))
     {
         if (next.col > prev.col)
@@ -178,6 +179,7 @@ void Board_state::move(const Position& prev, const Position& next)
         state_[next.row][next.col] = state_[prev.row][prev.col];
         state_[prev.row][prev.col] = 0;
     }
+    // Promotion
     if ((state_[next.row][next.col] == 6) && (next.row == 0))
     {
         state_[next.row][next.col] = 4;
@@ -248,6 +250,36 @@ int Board_state::value_of_state(Piece_color color) const
         return white_value - black_value;
     }
     return black_value - white_value;
+}
+
+bool Board_state::find_white_king() const
+{
+    for (const auto& row : state_)
+    {
+        for (const auto& piece : row)
+        {
+            if (piece == 5)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Board_state::find_black_king() const
+{
+    for (const auto& row : state_)
+    {
+        for (const auto& piece : row)
+        {
+            if (piece == -5)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void Board_state::draw_board() const

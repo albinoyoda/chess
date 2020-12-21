@@ -20,12 +20,12 @@ class Node
 public:
     Node() = default;
 
-    explicit Node(const Board_state& state, Action action, Piece_color color);
+    explicit Node(const Board_state& state, Action action, Piece_color color, bool king_dead);
 
     Board_state state;
     Action this_action;
     Piece_color color{};
-    std::vector<Action> actions;
+    std::vector<Action> actions{};
     int value{};
     bool is_root{false};
 
@@ -39,12 +39,12 @@ class Tree_search
 public:
     Tree_search() = delete;
     explicit Tree_search(const Tree_search_config& config, Board_state board_state, Piece_color color)
-        : config_{config}, color{color}, root_node{board_state, Action{}, color}
+        : config_{config}, color{color}, root_node{board_state, Action{}, color, false}
     {
         root_node.is_root = true;
     };
 
-    int search(Node& node, int depth, int alpha, int beta, bool maximising_player);
+    void find_best_action();
 
     Action get_best_action();
 
@@ -53,6 +53,9 @@ public:
     Node root_node;
     std::vector<Action_value_pair> root_child_values;
     int queries = 0;
+
+private:
+    int search(Node& node, int depth, int alpha, int beta, bool maximising_player);
 };
 
 #endif // CHESS_PROJECT_TREE_SEARCH_HPP

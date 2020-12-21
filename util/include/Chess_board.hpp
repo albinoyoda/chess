@@ -12,7 +12,7 @@ class Chess_board
 public:
     Chess_board() = default;
 
-    bool is_valid_move(std::string in_string) const;
+    bool is_valid_move(std::string in_string);
 
     void draw_board(int value_of_computer = 0, bool fancy_art = false) const;
 

@@ -12,6 +12,21 @@ bool is_move_in_vector(const Position& pos, const std::vector<Position>& moves)
     return false;
 }
 
+bool is_move_in_vector(const Position& pos, const std::vector<std::vector<Position>>& all_moves)
+{
+    for (const auto& moves : all_moves)
+    {
+        for (const auto& move : moves)
+        {
+            if (move == pos)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool is_action_in_vector(const Action& action, const std::vector<Action>& actions)
 {
     for (const auto& move : actions)

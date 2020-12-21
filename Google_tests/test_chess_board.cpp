@@ -26,10 +26,10 @@ TEST(TestSuite, test_coordinates_to_command)
 TEST(TestSuite, test_move_piece)
 {
     Chess_board chess_board{};
-    std::string command{"b2d2"};
+    std::string command{"d2d4"};
     chess_board.move(command);
-    auto prev_coordinate = chess_board.coordinate_from_command(command[0], command[1]);
-    auto new_coordinate = chess_board.coordinate_from_command(command[2], command[3]);
+    auto prev_coordinate = Chess_board::coordinate_from_command(command[0], command[1]);
+    auto new_coordinate = Chess_board::coordinate_from_command(command[2], command[3]);
 
     ASSERT_EQ(chess_board.board_state_(prev_coordinate), 0);
     ASSERT_EQ(chess_board.board_state_(new_coordinate), 6);

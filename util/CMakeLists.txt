@@ -1,4 +1,5 @@
 set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.14)
 project(chess_library)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -24,5 +25,8 @@ add_library(
         source/Chess_board.cpp
         source/Piece.cpp
         source/Moves.cpp
-        source/Types.cpp source/Test_functions.cpp include/Test_functions.hpp source/Tree_search.cpp include/Tree_search.hpp)
+        source/Types.cpp
+        source/Test_functions.cpp
+        include/Test_functions.tcc
+        source/Tree_search.cpp)
 

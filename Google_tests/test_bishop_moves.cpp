@@ -15,7 +15,7 @@ TEST(TestSuite, test_black_bishop_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{0, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_black_bishop_opening2)
@@ -30,7 +30,7 @@ TEST(TestSuite, test_black_bishop_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{0, 5}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_black_bishop_open_area)
@@ -45,7 +45,7 @@ TEST(TestSuite, test_black_bishop_open_area)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{3, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 6);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 6);
 }
 
 TEST(TestSuite, test_white_bishop_open_area)
@@ -60,7 +60,7 @@ TEST(TestSuite, test_white_bishop_open_area)
                             "00wHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{4, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 7);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 7);
 }
 
 TEST(TestSuite, test_white_bishop_opening1)
@@ -75,7 +75,7 @@ TEST(TestSuite, test_white_bishop_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{7, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }
 
 TEST(TestSuite, test_white_bishop_opening2)
@@ -90,5 +90,5 @@ TEST(TestSuite, test_white_bishop_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_bishop_moves(Position{7, 5}, board_state);
-    ASSERT_EQ(possible_moves.size(), 0);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 0);
 }

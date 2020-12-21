@@ -30,7 +30,7 @@ Position Chess_board::coordinate_from_command(char col_char, char row_char)
     return {row, col};
 }
 
-bool Chess_board::is_valid_move(std::string in_string) const
+bool Chess_board::is_valid_move(std::string in_string)
 {
     if (in_string.empty())
     {
@@ -52,11 +52,15 @@ bool Chess_board::is_valid_move(std::string in_string) const
         {
             Position pos1 = {row1, col1};
             Position pos2 = {row2, col2};
-            auto actions = get_actions_on_square(pos1, board_state_);
-            Action commanded_action = Action{pos1, pos2};
-            if (is_action_in_vector(commanded_action, actions))
+            if (board_state_(pos1) != 0)
             {
-                return true;
+                auto actions = get_actions_on_square(pos1, board_state_);
+                Action commanded_action = Action{pos1, pos2};
+                if (is_action_in_vector(commanded_action, actions[0]) ||
+                    is_action_in_vector(commanded_action, actions[1]))
+                {
+                    return true;
+                }
             }
         }
     }
@@ -90,7 +94,7 @@ void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
             empty.push_back(' ');
         }
 
-        for (int row = 0; row < 9 * square_height; row++)
+        for (int row = 0; row < 8 * square_height + 3; row++)
         {
             board += empty;
             for (int col = 0; col < 8; col++)
@@ -138,9 +142,8 @@ void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
         for (int col = 1; col < 9; col++)
         {
             auto shape = letter_shapes.at(col);
-            int shape_height = shape.size();
             int shape_width = shape[0].size();
-            int start_row = 8 * square_height + square_height / (shape_height + 1);
+            int start_row = 8 * square_height;
             int start_col = col * square_width + (square_width - shape_width) / 2;
             int start_index = start_row * board_width + start_col;
             for (const auto& shape_row : shape)
@@ -191,7 +194,7 @@ void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
                 }
             }
         }
-        std::cout << board;
+        std::cout << board << std::endl;
     }
     else
     {

@@ -15,7 +15,7 @@ TEST(TestSuite, test_black_horse_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{0, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 2);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 2);
 }
 
 TEST(TestSuite, test_black_horse_opening2)
@@ -30,7 +30,7 @@ TEST(TestSuite, test_black_horse_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{0, 6}, board_state);
-    ASSERT_EQ(possible_moves.size(), 2);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 2);
 }
 
 TEST(TestSuite, test_black_horse_open_area)
@@ -45,7 +45,7 @@ TEST(TestSuite, test_black_horse_open_area)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{3, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 4);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 4);
 }
 
 TEST(TestSuite, test_white_horse_take)
@@ -60,7 +60,7 @@ TEST(TestSuite, test_white_horse_take)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{3, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 6);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 6);
 }
 
 TEST(TestSuite, test_white_horse_open_area)
@@ -75,7 +75,7 @@ TEST(TestSuite, test_white_horse_open_area)
                             "00wHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{4, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 6);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 6);
 }
 
 TEST(TestSuite, test_black_horse_take)
@@ -90,7 +90,7 @@ TEST(TestSuite, test_black_horse_take)
                             "00wHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{4, 2}, board_state);
-    ASSERT_EQ(possible_moves.size(), 8);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 8);
 }
 
 TEST(TestSuite, test_white_horse_opening1)
@@ -105,7 +105,7 @@ TEST(TestSuite, test_white_horse_opening1)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{7, 1}, board_state);
-    ASSERT_EQ(possible_moves.size(), 2);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 2);
 }
 
 TEST(TestSuite, test_white_horse_opening2)
@@ -120,5 +120,5 @@ TEST(TestSuite, test_white_horse_opening2)
                             "wTwHwBwQwKwBwHwT"};
 
     auto possible_moves = get_horse_moves(Position{7, 6}, board_state);
-    ASSERT_EQ(possible_moves.size(), 2);
+    ASSERT_EQ(concatenate_vectors(possible_moves).size(), 2);
 }

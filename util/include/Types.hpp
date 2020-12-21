@@ -83,12 +83,18 @@ public:
 
     [[nodiscard]] int value_of_state(Piece_color piece_color) const;
 
+    bool find_white_king() const;
+
+    bool find_black_king() const;
+
     void draw_board() const;
 
     int& operator()(const Position& pos);
     int operator()(const Position& pos) const;
 
     std::array<std::array<int, 8>, 8> state_{};
+    bool white_checked{false};
+    bool black_checked{false};
 };
 
 #endif // CHESS_PROJECT_TYPES_HPP
