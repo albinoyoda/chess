@@ -71,7 +71,6 @@ TEST(TestSuite, test_king_mate_castling_bishop)
                             "0000000000000000"
                             "0000000000000000"};
 
-    get_all_actions(board_state, Piece_color::white);
     auto all_moves = get_king_moves({0, 4}, board_state);
 
     ASSERT_EQ(concatenate_vectors(all_moves).size(), 5);

@@ -1,5 +1,7 @@
 #include "Moves.hpp"
 
+#include "Test_functions.hpp"
+
 namespace
 {
 std::vector<std::vector<Action>> convert_to_actions(const Position& pos,
@@ -21,7 +23,7 @@ std::vector<std::vector<Action>> convert_to_actions(const Position& pos,
 }
 } // namespace
 
-std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_pawn_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
     moves.reserve(2);
@@ -42,10 +44,6 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Boar
                 if (is_black(board_state(position + Position::north_west())))
                 {
                     taking_moves.emplace_back(position + Position::north_west());
-                    if (board_state(position + Position::north_west()) == -5)
-                    {
-                        board_state.black_checked = true;
-                    }
                 }
             }
             if (position.col < 7)
@@ -53,10 +51,6 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Boar
                 if (is_black(board_state(position + Position::north_east())))
                 {
                     taking_moves.emplace_back(position + Position::north_east());
-                    if (board_state(position + Position::north_east()) == -5)
-                    {
-                        board_state.black_checked = true;
-                    }
                 }
             }
         }
@@ -81,10 +75,6 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Boar
                 if (is_white(board_state(position + Position::south_west())))
                 {
                     taking_moves.emplace_back(position + Position::south_west());
-                    if (board_state(position + Position::south_west()) == 5)
-                    {
-                        board_state.white_checked = true;
-                    }
                 }
             }
             if (position.col < 7)
@@ -92,10 +82,6 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Boar
                 if (is_white(board_state(position + Position::south_east())))
                 {
                     taking_moves.emplace_back(position + Position::south_east());
-                    if (board_state(position + Position::south_east()) == 5)
-                    {
-                        board_state.white_checked = true;
-                    }
                 }
             }
         }
@@ -110,7 +96,7 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, Boar
     return {std::move(taking_moves), std::move(moves)};
 }
 
-std::vector<std::vector<Position>> get_tower_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_tower_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
     moves.reserve(16);
@@ -129,10 +115,6 @@ std::vector<std::vector<Position>> get_tower_moves(const Position& position, Boa
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -152,10 +134,6 @@ std::vector<std::vector<Position>> get_tower_moves(const Position& position, Boa
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -175,10 +153,6 @@ std::vector<std::vector<Position>> get_tower_moves(const Position& position, Boa
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -198,10 +172,6 @@ std::vector<std::vector<Position>> get_tower_moves(const Position& position, Boa
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -212,7 +182,7 @@ std::vector<std::vector<Position>> get_tower_moves(const Position& position, Boa
     return {std::move(taking_moves), std::move(moves)};
 }
 
-std::vector<std::vector<Position>> get_horse_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_horse_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
     moves.reserve(8);
@@ -241,17 +211,13 @@ std::vector<std::vector<Position>> get_horse_moves(const Position& position, Boa
             else if (color != is_white(sq))
             {
                 taking_moves.emplace_back(move);
-                if (std::abs(sq) == 5)
-                {
-                    color ? board_state.black_checked = true : board_state.white_checked = true;
-                }
             }
         }
     }
     return {std::move(taking_moves), std::move(moves)};
 }
 
-std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_bishop_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
     moves.reserve(8);
@@ -270,10 +236,6 @@ std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Bo
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -293,10 +255,6 @@ std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Bo
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -316,10 +274,6 @@ std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Bo
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -339,10 +293,6 @@ std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Bo
         else if (color != is_white(sq))
         {
             taking_moves.emplace_back(possible_position);
-            if (std::abs(sq) == 5)
-            {
-                color ? board_state.black_checked = true : board_state.white_checked = true;
-            }
             break;
         }
         else
@@ -353,7 +303,7 @@ std::vector<std::vector<Position>> get_bishop_moves(const Position& position, Bo
     return {std::move(taking_moves), std::move(moves)};
 }
 
-std::vector<std::vector<Position>> get_queen_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_queen_moves(const Position& position, const Board_state& board_state)
 {
     auto tower_moves = get_tower_moves(position, board_state);
     auto bishop_moves = get_bishop_moves(position, board_state);
@@ -362,7 +312,7 @@ std::vector<std::vector<Position>> get_queen_moves(const Position& position, Boa
     return {std::move(tower_moves[0]), std::move(tower_moves[1])};
 }
 
-std::vector<std::vector<Position>> get_king_moves(const Position& position, Board_state& board_state)
+std::vector<std::vector<Position>> get_king_moves(const Position& position, const Board_state& board_state)
 {
     std::vector<Position> moves{};
     moves.reserve(8);
@@ -428,20 +378,12 @@ std::vector<std::vector<Position>> get_king_moves(const Position& position, Boar
     return {std::move(taking_moves), std::move(moves)};
 }
 
-std::vector<Action> get_all_actions(Board_state& board_state, Piece_color color)
+std::vector<Action> get_all_actions(const Board_state& board_state, Piece_color color)
 {
     std::vector<Action> taking_actions;
     taking_actions.reserve(10);
     std::vector<Action> moving_actions;
     moving_actions.reserve(40);
-    if (color == Piece_color::white)
-    {
-        board_state.black_checked = false;
-    }
-    else
-    {
-        board_state.white_checked = false;
-    }
     for (int row = 0; row < 8; row++)
     {
         for (int col = 0; col < 8; col++)
@@ -461,7 +403,7 @@ std::vector<Action> get_all_actions(Board_state& board_state, Piece_color color)
     return taking_actions;
 }
 
-std::vector<std::vector<Action>> get_actions_on_square(const Position& position, Board_state& board_state)
+std::vector<std::vector<Action>> get_actions_on_square(const Position& position, const Board_state& board_state)
 {
     int sq = board_state(position);
     switch (sq)
@@ -499,4 +441,69 @@ std::vector<std::vector<Action>> get_actions_on_square(const Position& position,
     default:
         return {};
     }
+}
+
+bool is_checked(const Board_state& board_state, Piece_color color)
+{
+    Position king_sq = color ? board_state.find_white_king() : board_state.find_black_king();
+
+    for (int row = 0; row < 8; row++)
+    {
+        for (int col = 0; col < 8; col++)
+        {
+            auto pos = Position{row, col};
+            if ((board_state(pos) == 0) || (color == Piece_color::white && (board_state(pos) > 0)) ||
+                (color == Piece_color::black && (board_state(pos) < 0)))
+            {
+                continue;
+            }
+            int sq = board_state(pos);
+            switch (sq)
+            {
+            case Piece_type::white_tower:
+            case Piece_type::black_tower:
+                if (king_sq.row == pos.row || king_sq.col == pos.col)
+                {
+                    auto moves = get_tower_moves(pos, board_state);
+                    return is_move_in_vector(king_sq, moves);
+                }
+                continue;
+            case Piece_type::white_knight:
+            case Piece_type::black_knight:
+                if (distance(king_sq, pos) == 3)
+                {
+                    auto moves = get_horse_moves(pos, board_state);
+                    return is_move_in_vector(king_sq, moves);
+                }
+                continue;
+            case Piece_type::white_bishop:
+            case Piece_type::black_bishop:
+                if (same_color_square(king_sq, pos))
+                {
+                    auto moves = get_bishop_moves(pos, board_state);
+                    return is_move_in_vector(king_sq, moves);
+                }
+                continue;
+            case Piece_type::white_queen:
+            case Piece_type::black_queen:
+                if (same_color_square(king_sq, pos) || (king_sq.row == pos.row || king_sq.col == pos.col))
+                {
+                    auto moves = get_queen_moves(pos, board_state);
+                    return is_move_in_vector(king_sq, moves);
+                }
+                continue;
+            case Piece_type::white_pawn:
+            case Piece_type::black_pawn:
+                if ((distance(king_sq, pos) == 2) && same_color_square(king_sq, pos))
+                {
+                    auto moves = get_pawn_moves(pos, board_state);
+                    return is_move_in_vector(king_sq, moves);
+                }
+                continue;
+            default:
+                continue;
+            }
+        }
+    }
+    return false;
 }

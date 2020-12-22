@@ -5,7 +5,7 @@
 #include <cassert>
 #include <utility>
 
-enum Piece_type
+enum Piece_type : int8_t
 {
     white_tower = 1,
     white_knight = 2,
@@ -23,10 +23,10 @@ enum Piece_type
 
 std::ostream& operator<<(std::ostream& os, const Piece_type& action);
 
-enum class Piece_color
+enum Piece_color : bool
 {
-    white,
-    black
+    white = true,
+    black = false,
 };
 
 std::ostream& operator<<(std::ostream& os, const Piece_color& action);
@@ -70,31 +70,15 @@ using Action = std::pair<Position, Position>;
 
 std::ostream& operator<<(std::ostream& os, const Action& action);
 
-class Board_state
+constexpr bool is_inside_board(const Position& pos)
 {
-public:
-    Board_state();
+    return pos.col >= 0 && pos.col <= 7 && pos.row >= 0 && pos.row <= 7;
+}
 
-    explicit Board_state(const std::string& configuration);
+int distance(const Position& pos1, const Position& pos2);
 
-    explicit Board_state(const std::array<std::array<int, 8>, 8>& configuration);
+bool is_square_white(const Position& pos1);
 
-    void move(const Position& prev, const Position& next);
-
-    [[nodiscard]] int value_of_state(Piece_color piece_color) const;
-
-    bool find_white_king() const;
-
-    bool find_black_king() const;
-
-    void draw_board() const;
-
-    int& operator()(const Position& pos);
-    int operator()(const Position& pos) const;
-
-    std::array<std::array<int, 8>, 8> state_{};
-    bool white_checked{false};
-    bool black_checked{false};
-};
+bool same_color_square(const Position& pos1, const Position& pos2);
 
 #endif // CHESS_PROJECT_TYPES_HPP

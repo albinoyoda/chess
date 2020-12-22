@@ -11,9 +11,11 @@ Node::Node(const Board_state& state, Action action, Piece_color color, bool king
 {
     if (!king_dead)
     {
-        // Check if there is a mate
-        color == Piece_color::white ? get_all_actions(this->state, Piece_color::black) :
-                                      get_all_actions(this->state, Piece_color::white);
+        // Check if there is a check
+        if(is_checked(this->state, color))
+        {
+            color ? this->state.white_checked = true : this->state.black_checked = true;
+        }
         actions = get_all_actions(this->state, color);
     }
 }
