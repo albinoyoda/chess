@@ -60,7 +60,8 @@ int main()
         if (player1_turn)
         {
             std::string move{};
-            std::cout << "Enter your move (a-h)(1-8) -> (a-h)(1-8). (Example 'b2b4')\n";
+            std::cout << "Enter your move (a-h)(1-8) -> (a-h)(1-8), ex: 'b2b4') (write 'undo' do undo last "
+                         "move)\n";
             while (!chess_board.is_valid_move(move))
             {
                 std::cin >> move;
@@ -82,25 +83,20 @@ int main()
                 tree_search.root_child_values[0].second - chess_board.board_state_.value_of_state(player2_color);
             moved_piece = Piece_type(chess_board.board_state_(best_action.first));
             captured_piece = Piece_type(chess_board.board_state_(best_action.second));
-            chess_board.board_state_.move(best_action.first, best_action.second);
+            chess_board.move(best_action);
             n_searches = tree_search.queries;
         }
         player1_turn = !player1_turn;
         std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         if (player1_turn)
         {
-            std::cout << best_action;
-            if (n_searches > 2000000)
+            if (n_searches > 10000000)
             {
                 std::cout << "Evaluated " << n_searches << " board states (weird flex)\n";
             }
             if (captured_piece != 0)
             {
                 std::cout << "The computer captures " << Piece_type(captured_piece) << " with " << moved_piece << "!\n";
-            }
-            else
-            {
-                std::cout << "The computer moves: " << moved_piece << "\n";
             }
             std::cout << "Computer estimates its move to have the value: " << value_of_computer_move << "\n";
             std::cout << "Players turn:\n";

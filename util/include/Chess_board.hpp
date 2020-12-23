@@ -10,7 +10,7 @@
 class Chess_board
 {
 public:
-    Chess_board() = default;
+    Chess_board() { board_history.push_back(board_state_); };
 
     bool is_valid_move(std::string in_string);
 
@@ -18,9 +18,9 @@ public:
 
     void move(std::string command);
 
-    static Position coordinate_from_command(char a, char b);
+    void move(const Action& action);
 
-    Board_state board_state_;
+    static Position coordinate_from_command(char a, char b);
 
     bool find_white_king();
 
@@ -28,6 +28,9 @@ public:
 
     bool find_kings();
 
+    Board_state board_state_{};
+    std::vector<Board_state> board_history{};
+    std::vector<Action> action_history{};
     const std::map<int, std::string> print_piece{{0, "[  ]"},  {1, "[wT]"},  {2, "[wH]"},  {3, "[wB]"},  {4, "[wQ]"},
                                                  {5, "[wK]"},  {6, "[wP]"},  {-1, "[bT]"}, {-2, "[bH]"}, {-3, "[bB]"},
                                                  {-4, "[bQ]"}, {-5, "[bK]"}, {-6, "[bP]"}};
@@ -140,19 +143,19 @@ public:
     std::vector<std::string> black_tower_shape{{" ||||| "}, {" )...( "}, {" (...) "}, {" )...( "}, {"[_____]"}};
 
     std::vector<std::string> black_king_shape{
-        {"   M   "}, {"  (.)  "}, {" (...) "}, {"  ).(  "}, {" (...) "}, {"[_____]"},
+        {"   †   "}, {"  (.)  "}, {" (...) "}, {"  ).(  "}, {" (...) "}, {"[_____]"},
     };
 
     std::vector<std::string> white_king_shape{
-        {"   M   "}, {"  (@)  "}, {" (@@@) "}, {"  )@(  "}, {" (@@@) "}, {"[@@@@@]"},
+        {"   †   "}, {"  (@)  "}, {" (@@@) "}, {"  )@(  "}, {" (@@@) "}, {"[@@@@@]"},
     };
 
     std::vector<std::string> black_queen_shape{
-        {"   o   "}, {"  (.)  "}, {" (...) "}, {"  ).(  "}, {" (...) "}, {"[_____]"},
+        {"   ,   "}, {"  (.)  "}, {" (...) "}, {"  ).(  "}, {" (...) "}, {"[_____]"},
     };
 
     std::vector<std::string> white_queen_shape{
-        {"   o   "}, {"  (@)  "}, {" (@@@) "}, {"  )@(  "}, {" (@@@) "}, {"[@@@@@]"},
+        {"   ,   "}, {"  (@)  "}, {" (@@@) "}, {"  )@(  "}, {" (@@@) "}, {"[@@@@@]"},
     };
 
     std::map<int, std::vector<std::string>> figure_shapes{

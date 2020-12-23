@@ -36,6 +36,19 @@ bool Chess_board::is_valid_move(std::string in_string)
     {
         return false;
     }
+    if (in_string == "undo")
+    {
+        if (!action_history.empty())
+        {
+            board_history.pop_back();
+            board_history.pop_back();
+            action_history.pop_back();
+            action_history.pop_back();
+            board_state_ = board_history.back();
+            draw_board(0, true);
+        }
+        return false;
+    }
     if (in_string.size() == 4)
     {
         int col1 = int(in_string[0]) - 97;
@@ -59,6 +72,15 @@ bool Chess_board::is_valid_move(std::string in_string)
                 if (is_action_in_vector(commanded_action, actions[0]) ||
                     is_action_in_vector(commanded_action, actions[1]))
                 {
+                    bool is_white = board_state_(pos1) > 0;
+                    auto temp_board = board_state_;
+                    temp_board.move(commanded_action.first, commanded_action.second);
+                    bool is_checked_after_move = is_checked(temp_board, static_cast<Piece_color>(is_white));
+                    if (is_checked_after_move)
+                    {
+                        std::cout << "Move '" << in_string << "' is not valid; would cause a check-mate!"  << std::endl;
+                        return false;
+                    }
                     return true;
                 }
             }
@@ -159,6 +181,56 @@ void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
             }
         }
 
+        if (!action_history.empty())
+        {
+            // Draw line between the squares
+            const Action& last_action = action_history.back();
+            int start_row = last_action.first.row * square_height + square_height / 2;
+            int start_col = (last_action.first.col + 1) * square_width + square_width / 2;
+            int d_row = last_action.second.row - last_action.first.row;
+            int d_col = last_action.second.col - last_action.first.col;
+            int length_row = d_row * square_height;
+            int length_col = d_col * square_width;
+            int length = std::abs(length_row) + std::abs(length_col);
+            double row_frac = double(length_row) / length;
+            double col_frac = double(length_col) / length;
+            //            double current_row = start_row;
+            //            double current_col = start_col;
+            double row_step = 0.0;
+            double col_step = 0.0;
+            int start_index = start_row * board_width + start_col;
+            board[start_index] = 'O';
+            for (int i = 0; i < length; i++)
+            {
+                row_step += row_frac;
+                col_step += col_frac;
+                if (row_step >= 1.0)
+                {
+                    start_index += board_width;
+                    row_step--;
+                    board[start_index] = 'o';
+                }
+                else if (row_step <= -1.0)
+                {
+                    start_index -= board_width;
+                    row_step++;
+                    board[start_index] = 'o';
+                }
+                if (col_step >= 1.0)
+                {
+                    start_index += 1;
+                    col_step--;
+                    board[start_index] = 'o';
+                }
+                else if (col_step <= -1.0)
+                {
+                    start_index -= 1;
+                    col_step++;
+                    board[start_index] = 'o';
+                }
+            }
+        }
+
         for (int row = 0; row < 8; row++)
         {
             for (int col = 0; col < 8; col++)
@@ -217,20 +289,19 @@ void Chess_board::draw_board(int value_of_computer, bool fancy_art) const
     }
 }
 
-void Chess_board::move(std::string command)
+void Chess_board::move(const Action& action)
 {
-    std::cout << "Moving: " + command + "\n";
-    auto current_pos = coordinate_from_command(command[0], command[1]);
-    auto new_pos = coordinate_from_command(command[2], command[3]);
-    board_state_.move(current_pos, new_pos);
+    board_state_.move(action.first, action.second);
+    board_history.push_back(board_state_);
+    action_history.push_back(action);
 }
 
-// void Chess_board::move(const Position& prev, const Position& next)
-//{
-//    board_state_.move(prev, next);
-//    state_[next.row][next.col] = state_[prev.row][prev.col];
-//    state_[prev.row][prev.col] = 0;
-//}
+void Chess_board::move(std::string command)
+{
+    auto current_pos = coordinate_from_command(command[0], command[1]);
+    auto new_pos = coordinate_from_command(command[2], command[3]);
+    move({current_pos, new_pos});
+}
 
 bool Chess_board::find_white_king()
 {

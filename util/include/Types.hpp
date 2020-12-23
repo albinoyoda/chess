@@ -7,6 +7,7 @@
 
 enum Piece_type : int8_t
 {
+    unknown = 0,
     white_tower = 1,
     white_knight = 2,
     white_bishop = 3,

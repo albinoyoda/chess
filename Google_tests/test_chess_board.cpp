@@ -4,11 +4,10 @@
 
 TEST(TestSuite, test_coordinates_to_command)
 {
-    Chess_board chess_board{};
-    auto coord1 = chess_board.coordinate_from_command("a"[0], "1"[0]);
-    auto coord2 = chess_board.coordinate_from_command("a"[0], "8"[0]);
-    auto coord3 = chess_board.coordinate_from_command("h"[0], "8"[0]);
-    auto coord4 = chess_board.coordinate_from_command("h"[0], "1"[0]);
+    auto coord1 = Chess_board::coordinate_from_command("a"[0], "1"[0]);
+    auto coord2 = Chess_board::coordinate_from_command("a"[0], "8"[0]);
+    auto coord3 = Chess_board::coordinate_from_command("h"[0], "8"[0]);
+    auto coord4 = Chess_board::coordinate_from_command("h"[0], "1"[0]);
 
     ASSERT_EQ(coord1.row, 7);
     ASSERT_EQ(coord1.col, 0);

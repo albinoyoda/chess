@@ -86,8 +86,7 @@ TEST(TestSuite, test_white_pawn_opening_blocked)
 
     auto possible_moves = concatenate_vectors(get_pawn_moves(Position{6, 2}, board_state));
 
-    ASSERT_EQ(possible_moves.size(), 1);
-    ASSERT_TRUE(is_move_in_vector(Position{4, 2}, possible_moves));
+    ASSERT_EQ(possible_moves.size(), 0);
 }
 
 TEST(TestSuite, test_white_pawn_take)

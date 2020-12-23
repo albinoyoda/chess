@@ -56,7 +56,8 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, cons
         }
         if (position.row == 6)
         {
-            if (is_free(board_state(position + Position::north() + Position::north())))
+            if (is_free(board_state(position + Position::north() + Position::north())) &&
+                is_free(board_state(position + Position::north())))
             {
                 moves.emplace_back(position + Position::north() + Position::north());
             }
@@ -87,7 +88,8 @@ std::vector<std::vector<Position>> get_pawn_moves(const Position& position, cons
         }
         if (position.row == 1)
         {
-            if (is_free(board_state(position + Position::south() + Position::south())))
+            if (is_free(board_state(position + Position::south() + Position::south())) &&
+                is_free(board_state(position + Position::south())))
             {
                 moves.emplace_back(position + Position::south() + Position::south());
             }
@@ -452,8 +454,8 @@ bool is_checked(const Board_state& board_state, Piece_color color)
         for (int col = 0; col < 8; col++)
         {
             auto pos = Position{row, col};
-            if ((board_state(pos) == 0) || (color == Piece_color::white && (board_state(pos) > 0)) ||
-                (color == Piece_color::black && (board_state(pos) < 0)))
+            if ((board_state(pos) == 0) || ((color == Piece_color::white) && (board_state(pos) > 0)) ||
+                ((color == Piece_color::black) && (board_state(pos) < 0)))
             {
                 continue;
             }
@@ -465,7 +467,14 @@ bool is_checked(const Board_state& board_state, Piece_color color)
                 if (king_sq.row == pos.row || king_sq.col == pos.col)
                 {
                     auto moves = get_tower_moves(pos, board_state);
-                    return is_move_in_vector(king_sq, moves);
+                    if (is_move_in_vector(king_sq, moves))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 continue;
             case Piece_type::white_knight:
@@ -473,7 +482,14 @@ bool is_checked(const Board_state& board_state, Piece_color color)
                 if (distance(king_sq, pos) == 3)
                 {
                     auto moves = get_horse_moves(pos, board_state);
-                    return is_move_in_vector(king_sq, moves);
+                    if (is_move_in_vector(king_sq, moves))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 continue;
             case Piece_type::white_bishop:
@@ -481,7 +497,14 @@ bool is_checked(const Board_state& board_state, Piece_color color)
                 if (same_color_square(king_sq, pos))
                 {
                     auto moves = get_bishop_moves(pos, board_state);
-                    return is_move_in_vector(king_sq, moves);
+                    if (is_move_in_vector(king_sq, moves))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 continue;
             case Piece_type::white_queen:
@@ -489,7 +512,14 @@ bool is_checked(const Board_state& board_state, Piece_color color)
                 if (same_color_square(king_sq, pos) || (king_sq.row == pos.row || king_sq.col == pos.col))
                 {
                     auto moves = get_queen_moves(pos, board_state);
-                    return is_move_in_vector(king_sq, moves);
+                    if (is_move_in_vector(king_sq, moves))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 continue;
             case Piece_type::white_pawn:
@@ -497,7 +527,14 @@ bool is_checked(const Board_state& board_state, Piece_color color)
                 if ((distance(king_sq, pos) == 2) && same_color_square(king_sq, pos))
                 {
                     auto moves = get_pawn_moves(pos, board_state);
-                    return is_move_in_vector(king_sq, moves);
+                    if (is_move_in_vector(king_sq, moves))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 continue;
             default:

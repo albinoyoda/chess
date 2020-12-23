@@ -83,9 +83,6 @@ TEST(TestSuite, test_tree_search_depth_2)
 
     Tree_search_config config{};
     config.search_depth = 3;
-    config.prune = true;
-    //    config.debug = true;
-    //    config.debug_best_action = true;
 
     Tree_search tree_search{config, board_state, Piece_color::black};
     tree_search.find_best_action();
@@ -114,17 +111,13 @@ TEST(TestSuite, test_tree_search_mate_in_2_puzzle)
 
     Tree_search_config config{};
     config.search_depth = 6;
-    config.prune = true;
-    config.debug = false;
-    config.debug_best_action = true;
-    config.debug_n_actions = 100;
 
     Tree_search tree_search{config, board_state, Piece_color::white};
     tree_search.find_best_action();
     Action best_action = tree_search.get_best_action();
 
-    //    ASSERT_EQ(best_action.second.row, 1);
-    //    ASSERT_EQ(best_action.second.col, 2);
+    ASSERT_EQ(best_action.second.row, 2);
+    ASSERT_EQ(best_action.second.col, 6);
 }
 
 TEST(TestSuite, test_tree_search_mate_in_2_puzzle_reduced)
@@ -138,14 +131,12 @@ TEST(TestSuite, test_tree_search_mate_in_2_puzzle_reduced)
                             "0000wB0000000000"
                             "000000000000wK00"};
 
-    get_all_actions(board_state, Piece_color::black);
-
     Chess_board chess_board{};
     chess_board.board_state_ = board_state;
     chess_board.draw_board(0, true);
 
     Tree_search_config config{};
-    config.search_depth = 4;
+    config.search_depth = 10;
     config.prune = true;
     config.debug = false;
     config.debug_best_action = true;
@@ -182,6 +173,50 @@ TEST(TestSuite, test_tree_search_test_expansion)
     Action best_action = tree_search.get_best_action();
 
     ASSERT_EQ(tree_search.queries, 2);
+}
+
+TEST(TestSuite, test_tree_search_test_promotion_value_black)
+{
+    Board_state board_state{"0000000000000000"
+                            "00wB000000wP0000"
+                            "000000bH00000000"
+                            "0000000000000000"
+                            "00000000000000bK"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000wK0000000000"};
+
+    Tree_search_config config{};
+
+    Tree_search tree_search{config, board_state, Piece_color::black};
+    tree_search.find_best_action();
+    Action best_action = tree_search.get_best_action();
+
+    ASSERT_EQ(best_action.second.row, 1);
+    ASSERT_EQ(best_action.second.col, 5);
+}
+
+TEST(TestSuite, test_tree_search_test_promotion_value_white)
+{
+    Board_state board_state{"0000000000000000"
+                            "00wB000000wP0000"
+                            "000000bH00000000"
+                            "0000000000000000"
+                            "00000000000000bK"
+                            "0000000000000000"
+                            "0000000000000000"
+                            "0000wK0000000000"};
+
+    board_state.draw_board();
+
+    Tree_search_config config{};
+
+    Tree_search tree_search{config, board_state, Piece_color::white};
+    tree_search.find_best_action();
+    Action best_action = tree_search.get_best_action();
+
+    ASSERT_EQ(best_action.second.row, 0);
+    ASSERT_EQ(best_action.second.col, 5);
 }
 
 // mate in 4 config

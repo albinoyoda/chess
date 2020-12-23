@@ -24,10 +24,12 @@ Board_state::Board_state()
               {0, 0, 0, 0, 0, 0, 0, 0},
               {6, 6, 6, 6, 6, 6, 6, 6},
               {1, 2, 3, 4, 5, 3, 2, 1}};
+    init_state_values();
 }
 
 Board_state::Board_state(const std::array<std::array<int, 8>, 8>& configuration) : state_{configuration}
 {
+    init_state_values();
 }
 
 Board_state::Board_state(const std::string& configuration)
@@ -44,6 +46,7 @@ Board_state::Board_state(const std::string& configuration)
     }
     white_checked = is_checked(*this, Piece_color::white);
     black_checked = is_checked(*this, Piece_color::black);
+    init_state_values();
 }
 
 int& Board_state::operator()(const Position& pos)
@@ -66,6 +69,10 @@ int Board_state::operator()(const Position& pos) const
 
 void Board_state::move(const Position& prev, const Position& next)
 {
+    // Check if the value should be recomputed
+    recompute_piece_values(state_[next.row][next.col], next.row);
+    recompute_position_values(state_[prev.row][prev.col], prev.row - next.row);
+
     // Castling
     if ((state_[prev.row][prev.col] == 5) && (std::abs(next.col - prev.col) == 2))
     {
@@ -109,20 +116,35 @@ void Board_state::move(const Position& prev, const Position& next)
     // Promotion
     if ((state_[next.row][next.col] == 6) && (next.row == 0))
     {
+        // White
         state_[next.row][next.col] = 4;
+        white_position_value -= 6;
+        white_piece_value += QueenValueMg - PawnValueMg;
     }
     else if ((state_[next.row][next.col] == -6) && (next.row == 7))
     {
+        // Black
         state_[next.row][next.col] = -4;
+        black_position_value -= 6;
+        black_piece_value += QueenValueMg - PawnValueMg;
     }
 }
 
 int Board_state::value_of_state(Piece_color color) const
 {
-    int white_value = 0;
-    int black_value = 0;
+    if (color == Piece_color::white)
+    {
+        return white_piece_value + white_position_value - (black_piece_value + black_position_value);
+    }
+    return black_piece_value + black_position_value - (white_piece_value + white_position_value);
+}
+
+void Board_state::init_state_values()
+{
+    int row_idx = -1;
     for (const auto& row : state_)
     {
+        row_idx++;
         for (const auto& sq : row)
         {
             if (sq == 0)
@@ -132,51 +154,108 @@ int Board_state::value_of_state(Piece_color color) const
             switch (sq)
             {
             case Piece_type::white_tower:
-                white_value += RookValueMg;
+                white_piece_value += RookValueMg;
                 break;
             case Piece_type::white_knight:
-                white_value += KnightValueMg;
+                white_piece_value += KnightValueMg;
                 break;
             case Piece_type::white_bishop:
-                white_value += BishopValueMg;
+                white_piece_value += BishopValueMg;
                 break;
             case Piece_type::white_queen:
-                white_value += QueenValueMg;
+                white_piece_value += QueenValueMg;
                 break;
             case Piece_type::white_king:
-                white_value += KingValueMg;
+                white_piece_value += KingValueMg;
                 break;
             case Piece_type::white_pawn:
-                white_value += PawnValueMg;
+                white_piece_value += PawnValueMg;
+                white_position_value += (6 - row_idx);
                 break;
             case Piece_type::black_tower:
-                black_value += RookValueMg;
+                black_piece_value += RookValueMg;
                 break;
             case Piece_type::black_knight:
-                black_value += KnightValueMg;
+                black_piece_value += KnightValueMg;
                 break;
             case Piece_type::black_bishop:
-                black_value += BishopValueMg;
+                black_piece_value += BishopValueMg;
                 break;
             case Piece_type::black_queen:
-                black_value += QueenValueMg;
+                black_piece_value += QueenValueMg;
                 break;
             case Piece_type::black_king:
-                black_value += KingValueMg;
+                black_piece_value += KingValueMg;
                 break;
             case Piece_type::black_pawn:
-                black_value += PawnValueMg;
+                black_piece_value += PawnValueMg;
+                black_position_value += (row_idx - 1);
                 break;
             default:
                 break;
             }
         }
     }
-    if (color == Piece_color::white)
+}
+
+void Board_state::recompute_piece_values(int taken_piece, int row)
+{
+    switch (taken_piece)
     {
-        return white_value - black_value;
+    case Piece_type::white_tower:
+        white_piece_value -= RookValueMg;
+        break;
+    case Piece_type::white_knight:
+        white_piece_value -= KnightValueMg;
+        break;
+    case Piece_type::white_bishop:
+        white_piece_value -= BishopValueMg;
+        break;
+    case Piece_type::white_queen:
+        white_piece_value -= QueenValueMg;
+        break;
+    case Piece_type::white_king:
+        white_piece_value -= KingValueMg;
+        break;
+    case Piece_type::white_pawn:
+        white_piece_value -= PawnValueMg;
+        white_position_value -= (6 - row);
+        break;
+    case Piece_type::black_tower:
+        black_piece_value -= RookValueMg;
+        break;
+    case Piece_type::black_knight:
+        black_piece_value -= KnightValueMg;
+        break;
+    case Piece_type::black_bishop:
+        black_piece_value -= BishopValueMg;
+        break;
+    case Piece_type::black_queen:
+        black_piece_value -= QueenValueMg;
+        break;
+    case Piece_type::black_king:
+        black_piece_value -= KingValueMg;
+        break;
+    case Piece_type::black_pawn:
+        black_piece_value -= PawnValueMg;
+        white_position_value -= (row - 1);
+        break;
+    default:
+        // Check promotion
+        break;
     }
-    return black_value - white_value;
+}
+
+void Board_state::recompute_position_values(int moved_piece, int steps)
+{
+    if (moved_piece == 6)
+    {
+        white_position_value += steps;
+    }
+    else if (moved_piece == -6)
+    {
+        black_position_value -= steps;
+    }
 }
 
 Position Board_state::find_white_king() const

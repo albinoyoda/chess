@@ -45,15 +45,7 @@ Node Node::traverse(const Action& action, bool debug, int depth, Piece_color max
         new_state.draw_board();
         std::cout << "Move value: " << val << std::endl;
     }
-    Piece_color new_color;
-    if (depth % 2)
-    {
-        new_color = maximizing_color;
-    }
-    else
-    {
-        new_color = maximizing_color == Piece_color::white ? Piece_color::black : Piece_color::white;
-    }
+    Piece_color new_color = (depth % 2) ? maximizing_color : static_cast<Piece_color>(!maximizing_color);
     return Node{new_state, action, new_color, king_dead};
 }
 
